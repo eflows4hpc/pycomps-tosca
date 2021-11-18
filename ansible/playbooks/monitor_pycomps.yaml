@@ -1,0 +1,23 @@
+- name: Monitor Pycomps Job execution
+  hosts: all
+  strategy: free
+  tasks:
+
+
+    - name: generate ssh cmd tasks
+      set_fact:
+        ssh_cmd_to_run: "scontrol show job {{ TOSCA_JOB_ID }} | grep JobState | awk -F' ' '{print \\$1;}' | awk -F= '{print \\$2;}'"
+
+    - name: generate ssh command
+      import_tasks: generate_ssh_cmd_tasks.yml
+
+    - name: monitor job
+      shell: "{{ ssh_cmd }}"
+      args:
+        executable: /bin/bash
+      register: ssh_output
+
+
+    - name: Extract TOSCA_JOB_STATUS
+      set_fact:
+        TOSCA_JOB_STATUS: "{{ ssh_output.stdout_lines[0] }}"

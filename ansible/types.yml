@@ -1,0 +1,51 @@
+tosca_definitions_version: alien_dsl_3_0_0
+
+
+metadata:
+  template_name: pycomps.ansible
+  template_version: 1.0.0-SNAPSHOT
+  template_author: loicalbertin
+
+
+imports:
+  - tosca-normative-types:1.0.0-ALIEN20
+  - alien-base-types:3.0.0
+  - yorc-types:1.1.0
+
+node_types:
+  pycomps.ansible.nodes.PyCOMPSJob:
+    derived_from: org.alien4cloud.nodes.Job
+    properties:
+      pycomps_endpoint:
+        type: string
+        description: The endpoint of the pycomps server
+        required: true
+      credentials:
+        type: tosca.datatypes.Credential
+        required: false
+      num_nodes:
+        type: integer
+        required: false
+        default: 1
+      command:
+        type: string
+        required: true
+      arguments:
+        type: list
+        required: false
+        entry_schema:
+          description: list of arguments
+          type: string
+    interfaces:
+      tosca.interfaces.node.lifecycle.Runnable:
+        inputs:
+          pycomps_endpoint: { get_property: [ SELF, pycomps_endpoint ] }
+          credentials: { get_property: [ SELF, credentials ] }
+        submit:
+          inputs:
+            num_nodes: { get_property: [ SELF, num_nodes ] }
+            command: { get_property: [ SELF, command ] }
+            arguments: { get_property: [ SELF, arguments ] }
+          implementation: playbooks/submit_pycomps.yaml
+        run: playbooks/monitor_pycomps.yaml
+
