@@ -16,7 +16,7 @@
       import_tasks: generate_ssh_cmd_tasks.yml
 
     - name: submit job
-      shell: "{{ ssh_cmd }} 2>&1 | grep 'Submitted batch job' | tr -d 'Submitted batch job'"
+      shell: "export DATA_PATH={{ data_path }} ; {{ ssh_cmd }} 2>&1 | grep 'Submitted batch job' | tr -d 'Submitted batch job'"
       args:
         executable: /bin/bash
       register: ssh_output
