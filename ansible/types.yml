@@ -50,9 +50,11 @@ node_types:
         submit:
           inputs:
             num_nodes: { get_property: [ SELF, num_nodes ] }
+            num_nodes_input: { get_input: [ num_nodes ] }
             command: { get_property: [ SELF, command ] }
             arguments: { get_property: [ SELF, arguments ] }
             data_path: { get_property: [ SELF, data_path ] }
+            data_path_input: { get_input: target_path }
           implementation: playbooks/submit_pycomps.yaml
         run: playbooks/monitor_pycomps.yaml
 

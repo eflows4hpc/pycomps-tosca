@@ -3,6 +3,20 @@
   strategy: free
   tasks:
 
+    - name: Set num_nodes
+      set_fact:
+        num_nodes: "{{ num_nodes_input }}"
+      when:
+        - num_nodes_input is defined
+        - num_nodes_input | length > 0
+
+    - name: Set data_path
+      set_fact:
+        data_path: "{{ data_path_input }}"
+      when:
+        - data_path_input is defined
+        - data_path_input | length > 0
+
     - name: generate ssh cmd tasks
       set_fact:
         ssh_cmd_to_run: "module load COMPSs/2.9; enqueue_compss --qos=debug -d --num_nodes={{ num_nodes }} {{ command }}"
