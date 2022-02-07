@@ -22,9 +22,6 @@ node_types:
         type: string
         description: The endpoint of the pycomps server
         required: true
-      credentials:
-        type: tosca.datatypes.Credential
-        required: false
       num_nodes:
         type: integer
         required: false
@@ -46,7 +43,8 @@ node_types:
       tosca.interfaces.node.lifecycle.Runnable:
         inputs:
           pycomps_endpoint: { get_property: [ SELF, pycomps_endpoint ] }
-          credentials: { get_property: [ SELF, credentials ] }
+          login: { get_vault_secret: [ concat: ["/secret/data/ssh-credentials/", get_input: user_id ], data=userName] }
+          key: { get_vault_secret: [ concat: ["/secret/data/ssh-credentials/", get_input: user_id ], data=privateKey] }
         submit:
           inputs:
             num_nodes: { get_property: [ SELF, num_nodes ] }

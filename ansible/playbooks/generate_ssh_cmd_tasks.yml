@@ -1,24 +1,7 @@
-- name: print credentials
-  debug:
-    var: credentials
-
-- name: read credentials
-  set_fact:
-    creds: "{{ credentials  }}"
-    ssh_cmd: "ssh "
-
-- name: print credentials
-  debug:
-    var: creds
-
-# - name: generate ssh cmd keys auth
-#   set_fact:
-#     ssh_cmd: "{{ ssh_cmd }} -i {{ item.value }}"
-#   loop: "{{ creds.keys | dict2items }}"
 
 - name: generate ssh cmd tasks
   set_fact:
-    ssh_cmd: "{{ ssh_cmd }} -o StrictHostKeyChecking=no  -i ~/.ssh/bsc-account {{ creds.user }}@{{ pycomps_endpoint }} \"{{ ssh_cmd_to_run }}\""
+    ssh_cmd: "eval `ssh-agent` >/dev/null; trap \"ssh-agent -k\" EXIT; ssh-add - <<< \"${PRIVATE_KEY}\" ; ssh -o StrictHostKeyChecking=no {{ login }}@{{ pycomps_endpoint }} \"{{ ssh_cmd_to_run }}\""
 
 
 - name: print ssh cmd

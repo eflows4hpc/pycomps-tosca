@@ -16,6 +16,8 @@
       args:
         executable: /bin/bash
       register: ssh_output
+      environment:
+        PRIVATE_KEY: "{{ key }}"
 
 
     - name: Extract TOSCA_JOB_STATUS
