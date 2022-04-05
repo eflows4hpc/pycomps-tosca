@@ -43,8 +43,8 @@ node_types:
       tosca.interfaces.node.lifecycle.Runnable:
         inputs:
           pycomps_endpoint: { get_property: [ SELF, pycomps_endpoint ] }
-          login: { get_vault_secret: [ concat: ["/secret/data/ssh-credentials/", get_input: user_id ], data=userName] }
-          key: { get_vault_secret: [ concat: ["/secret/data/ssh-credentials/", get_input: user_id ], data=privateKey] }
+          login: { get_input: user_id }
+          key: { get_vault_secret: [ concat: ["/secret/data/ssh-credentials/", get_input: vault_id ], data=privateKey] }
         submit:
           inputs:
             num_nodes: { get_property: [ SELF, num_nodes ] }
