@@ -22,14 +22,22 @@ node_types:
         type: string
         description: The endpoint of the pycomps server
         required: true
+      compss_module_version:
+        type: string
+        required: false
+        default: "2.10"
       num_nodes:
         type: integer
         required: false
         default: 1
-      data_path:
+      input_data_path:
         type: string
         required: false
-        default: ""
+        default: "/tmp"
+      output_data_path:
+        type: string
+        required: false
+        default: "/tmp"
       command:
         type: string
         required: true
@@ -39,6 +47,26 @@ node_types:
         entry_schema:
           description: list of arguments
           type: string
+      container_image:
+        type: string
+        required: false
+        default: ""
+      container_compss_path:
+        type: string
+        required: false
+        default: ""
+      container_opts:
+        type: string
+        required: false
+        default: ""
+      python_interpreter:
+        type: string
+        required: false
+        default: ""
+      extra_compss_opts:
+        type: string
+        required: false
+        default: ""
     interfaces:
       tosca.interfaces.node.lifecycle.Runnable:
         inputs:
@@ -47,12 +75,21 @@ node_types:
           key: { get_vault_secret: [ concat: ["/secret/data/ssh-credentials/", get_input: vault_id ], data=privateKey] }
         submit:
           inputs:
+            compss_module_version: { get_property: [ SELF, compss_module_version ] }
+            compss_module_version_input: { get_input: [ compss_module_version ] }
             num_nodes: { get_property: [ SELF, num_nodes ] }
             num_nodes_input: { get_input: [ num_nodes ] }
             command: { get_property: [ SELF, command ] }
             arguments: { get_property: [ SELF, arguments ] }
-            data_path: { get_property: [ SELF, data_path ] }
-            data_path_input: { get_input: target_path }
+            input_data_path: { get_property: [ SELF, input_data_path ] }
+            input_data_path_input: { get_input: target_path }
+            output_data_path: { get_property: [ SELF, output_data_path ] }
+            output_data_path_input: { get_input: source_path }
+            container_image: { get_property: [ SELF, container_image ] }
+            container_compss_path: { get_property: [ SELF, container_compss_path ] }
+            container_opts: { get_property: [ SELF, container_opts ] }
+            python_interpreter: { get_property: [ SELF, python_interpreter ] }
+            extra_compss_opts: { get_property: [ SELF, extra_compss_opts ] }
           implementation: playbooks/submit_pycomps.yaml
         run: playbooks/monitor_pycomps.yaml
 
