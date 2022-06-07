@@ -30,6 +30,10 @@ node_types:
         type: integer
         required: false
         default: 1
+      qos:
+        type: string
+        required: false
+        default: debug
       input_data_path:
         type: string
         required: false
@@ -79,6 +83,7 @@ node_types:
             compss_module_version_input: { get_input: [ compss_module_version ] }
             num_nodes: { get_property: [ SELF, num_nodes ] }
             num_nodes_input: { get_input: [ num_nodes ] }
+            qos: { get_property: [ SELF, qos ] }
             command: { get_property: [ SELF, command ] }
             arguments: { get_property: [ SELF, arguments ] }
             input_data_path: { get_property: [ SELF, input_data_path ] }
