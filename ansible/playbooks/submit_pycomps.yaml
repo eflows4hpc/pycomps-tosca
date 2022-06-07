@@ -59,9 +59,16 @@
         - python_interpreter is defined
         - python_interpreter | length > 0
 
+    - name: Set qos
+      set_fact:
+        extra_compss_opts: "{{ extra_compss_opts }} --qos={{ qos }}"
+      when:
+        - qos is defined
+        - qos | length > 0
+
     - name: generate ssh cmd tasks
       set_fact:
-        ssh_cmd_to_run: "module load COMPSs/{{ compss_module_version }}; module load singularity; enqueue_compss {{ extra_compss_opts | default('') }} --qos=debug -d --num_nodes={{ num_nodes }} {{ command }}"
+        ssh_cmd_to_run: "module load COMPSs/{{ compss_module_version }}; module load compss/{{ compss_module_version }}; module load singularity; enqueue_compss {{ extra_compss_opts | default('') }} -d --num_nodes={{ num_nodes }} {{ command }}"
 
     - name: generate ssh cmd args
       set_fact:
