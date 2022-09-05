@@ -31,6 +31,13 @@
         - output_data_path_input is defined
         - output_data_path_input | length > 0
 
+    - name: Override container_image by transferred_container_image
+      set_fact:
+        container_image: "{{ transferred_container_image }}"
+      when:
+        - transferred_container_image is defined
+        - transferred_container_image | length > 0
+
     - name: Set container_image
       set_fact:
         extra_compss_opts: "{{ extra_compss_opts }} --container_image={{ container_image }}"

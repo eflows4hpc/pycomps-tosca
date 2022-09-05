@@ -11,6 +11,7 @@ imports:
   - tosca-normative-types:1.0.0-ALIEN20
   - alien-base-types:3.0.0
   - yorc-types:1.1.0
+  - dls.ansible:1.1.0-SNAPSHOT
 
 node_types:
   pycomps.ansible.nodes.PyCOMPSJob:
@@ -71,6 +72,12 @@ node_types:
         type: string
         required: false
         default: ""
+    requirements:
+      - img_transfer:
+          capability: tosca.capabilities.Node
+          node: dls.ansible.nodes.DLSDAGImageTransfer
+          relationship: tosca.relationships.DependsOn
+          occurrences: [ 0, UNBOUNDED ]
     interfaces:
       tosca.interfaces.node.lifecycle.Runnable:
         inputs:
@@ -90,6 +97,7 @@ node_types:
             input_data_path_input: { get_input: target_path }
             output_data_path: { get_property: [ SELF, output_data_path ] }
             output_data_path_input: { get_input: source_path }
+            transferred_container_image: { get_attribute: [ REQ_TARGET, img_transfer, image_file_path] }
             container_image: { get_property: [ SELF, container_image ] }
             container_compss_path: { get_property: [ SELF, container_compss_path ] }
             container_opts: { get_property: [ SELF, container_opts ] }
