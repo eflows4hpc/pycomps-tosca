@@ -81,6 +81,7 @@
       set_fact:
         ssh_cmd_to_run: "{{ ssh_cmd_to_run }} {{ item }}"
       loop: "{{ arguments }}"
+      when: arguments | length > 0
 
     - name: generate ssh command
       import_tasks: generate_ssh_cmd_tasks.yml
